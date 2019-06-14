@@ -73,7 +73,7 @@ def response_message(event):
         text="Text from: " + profile.display_name + ", userId: " + profile.user_id + ", pic: " + profile.picture_url + ". message: " + event.message.text
     )
 
-    to = 'U3bb522904f837fba8b3d6bbceae8849a'
+    to = 'U85814e91847a0e3b73886a44cc1d181f'
     line_bot_api.push_message(to, messages)
 
 
