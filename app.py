@@ -72,9 +72,6 @@ def response_message(event):
         messages = TextSendMessage(
             text=data["text"]
         )
-    print(event.reply_token)
-    line_bot_api.reply_message(event.reply_token, messages=messages)
-    print(event.reply_token)
     line_bot_api.reply_message(event.reply_token, messages=messages)
 
     # Ayamaru
@@ -83,7 +80,7 @@ def response_message(event):
         messages = TextSendMessage(
             text="ごめんなさい。"
         )
-        line_bot_api.reply_message(event.reply_token, messages=messages)
+        line_bot_api.push_message(event.source.user_id, messages)
 
     # Sent info to developer
     profile = line_bot_api.get_profile(event.source.user_id)
