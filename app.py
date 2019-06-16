@@ -78,7 +78,7 @@ def response_message(event):
     ran = random.uniform(0.0,1.0)
     if ran < ayamaru_rate:
         messages = TextSendMessage(
-            text="ごめんなさい。"
+            text="ごめんなさい"
         )
         line_bot_api.push_message(event.source.user_id, messages)
 
