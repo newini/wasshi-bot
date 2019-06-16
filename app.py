@@ -1,4 +1,4 @@
-import os
+import os, json, random
 
 from flask import Flask, request, abort
 from linebot import (
@@ -12,7 +12,8 @@ from linebot.models import (
     TextSendMessage # text message
 )
 
-import pya3rt # CURL
+# CURL
+import urllib.request, urllib.parse
 
 app = Flask(__name__)
 
@@ -23,8 +24,12 @@ line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(LINE_CHANNEL_SECRET)
 
 # Talk api
-TALKAPI_KEY = os.environ["TALKAPI_KEY"]
-client = pya3rt.TalkClient(TALKAPI_KEY)
+NOBYAPI_KEY = os.environ["NOBYAPI_KEY"]
+nobyapi_url = "https://www.cotogoto.ai/webapi/noby.json?"
+nobyapi_persona = 0 # 0: normal, 1: tsundere-onna, 2: tsundere-otoko, 3: kami
+
+# Wasshi value
+ayamaru_rate = 0.8
 
 
 @app.route("/callback", methods=['POST'])
@@ -47,35 +52,43 @@ def response_message(event):
     if event.reply_token == "00000000000000000000000000000000":
         return
 
-    response = client.talk(event.message.text)
-
     messages = TextSendMessage()
-    if response["status"] == 0:
-        text = ""
-        for result in response["results"]:
-            #text.append(result["reply"])
-            text += result["reply"]
+
+    #response = client.talk(event.message.text)
+    params = {
+        "appkey": NOBYAPI_KEY,
+        "text": event.message.text,
+        "persona": nobyapi_persona,
+    }
+    p = urllib.parse.urlencode(params)
+
+    url = nobyapi_url + p
+    with urllib.request.urlopen(url) as res:
+        html = res.read().decode("utf-8")
+        #print(html)
     
+        data = json.loads(html)
+ 
         messages = TextSendMessage(
-            text=text + "。ごめんなさい。"
+            text=data["text"]
         )
-
-    else:
-        messages = TextSendMessage(
-            text="何言ってるか理解できないです。ごめんなさい。"
-        )
-
     line_bot_api.reply_message(event.reply_token, messages=messages)
 
-    profile = line_bot_api.get_profile(event.source.user_id)
+    # Ayamaru
+    ran = random.uniform(0.0,1.0)
+    if ran < ayamaru_rate:
+        messages = TextSendMessage(
+            text="ごめんなさい。"
+        )
+        line_bot_api.reply_message(event.reply_token, messages=messages)
 
+    # Sent info to developer
+    profile = line_bot_api.get_profile(event.source.user_id)
     messages = TextSendMessage(
         text="Text from: " + profile.display_name + ", userId: " + profile.user_id + ", pic: " + profile.picture_url + ". message: " + event.message.text
     )
-
     to = 'U85814e91847a0e3b73886a44cc1d181f'
     line_bot_api.push_message(to, messages)
-
 
 
 if __name__ == "__main__":
