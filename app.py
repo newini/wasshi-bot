@@ -72,6 +72,9 @@ def response_message(event):
         messages = TextSendMessage(
             text=data["text"]
         )
+    print(event.reply_token)
+    line_bot_api.reply_message(event.reply_token, messages=messages)
+    print(event.reply_token)
     line_bot_api.reply_message(event.reply_token, messages=messages)
 
     # Ayamaru
