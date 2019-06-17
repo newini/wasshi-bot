@@ -29,7 +29,7 @@ nobyapi_url = "https://www.cotogoto.ai/webapi/noby.json?"
 nobyapi_persona = 1 # 0: normal, 1: tsundere-onna, 2: tsundere-otoko, 3: kami
 
 # Line notify
-LINENOTIFY_TOKEN = os.eviron["LINENOTIFY_TOKEN"]
+LINENOTIFY_TOKEN = os.environ["LINENOTIFY_TOKEN"]
 linenotify_url = "https://notify-api.line.me/api/notify"
 
 # Wasshi value
