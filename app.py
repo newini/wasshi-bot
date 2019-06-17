@@ -90,7 +90,7 @@ def response_message(event):
     text = ("From: " + profile.display_name + "\n"
             + "userId: " + profile.user_id + "\n"
             + "message: " + event.message.text)
-    payload = {"message" :  message}
+    payload = {"message" :  text}
 
     #files = {"imageFile": open("test.jpg", "rb")} #バイナリで画像ファイルを開きます。対応している形式はPNG/JPEGです。
     #r = requests.post(url ,headers = headers ,params=payload, files=files)
