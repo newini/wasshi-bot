@@ -87,9 +87,9 @@ def response_message(event):
     headers = {"Authorization" : "Bearer "+ LINENOTIFY_TOKEN}
 
     profile = line_bot_api.get_profile(event.source.user_id)
-    text = "From: " + profile.display_name + "\n"
+    text = ("From: " + profile.display_name + "\n"
             + "userId: " + profile.user_id + "\n"
-            + "message: " + event.message.text
+            + "message: " + event.message.text)
     payload = {"message" :  message}
 
     #files = {"imageFile": open("test.jpg", "rb")} #バイナリで画像ファイルを開きます。対応している形式はPNG/JPEGです。
