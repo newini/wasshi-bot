@@ -28,6 +28,10 @@ NOBYAPI_KEY = os.environ["NOBYAPI_KEY"]
 nobyapi_url = "https://www.cotogoto.ai/webapi/noby.json?"
 nobyapi_persona = 1 # 0: normal, 1: tsundere-onna, 2: tsundere-otoko, 3: kami
 
+# Line notify
+LINENOTIFY_TOKEN = os.eviron["LINENOTIFY_TOKEN"]
+linenotify_url = "https://notify-api.line.me/api/notify"
+
 # Wasshi value
 ayamaru_rate = 0.5
 
@@ -80,14 +84,18 @@ def response_message(event):
     line_bot_api.reply_message(event.reply_token, messages=messages)
 
     # Sent info to developer
+    headers = {"Authorization" : "Bearer "+ LINENOTIFY_TOKEN}
+
     profile = line_bot_api.get_profile(event.source.user_id)
-    messages = TextSendMessage(
-        text="From: " + profile.display_name + "\n"
-                + "userId: " + profile.user_id + "\n"
-                + "message: " + event.message.text
-    )
-    to = 'U85814e91847a0e3b73886a44cc1d181f'
-    line_bot_api.push_message(to, messages)
+    text = "From: " + profile.display_name + "\n"
+            + "userId: " + profile.user_id + "\n"
+            + "message: " + event.message.text
+    payload = {"message" :  message}
+
+    #files = {"imageFile": open("test.jpg", "rb")} #バイナリで画像ファイルを開きます。対応している形式はPNG/JPEGです。
+    #r = requests.post(url ,headers = headers ,params=payload, files=files)
+    requests.post(linenotify_url, headers = headers, params=payload)
+
 
 
 if __name__ == "__main__":
