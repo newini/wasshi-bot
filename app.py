@@ -17,6 +17,10 @@ from linebot.models import (
 # CURL
 import urllib.request, urllib.parse
 
+# Translate
+from googletrans import Translator
+
+
 app = Flask(__name__)
 
 # Line messange api
@@ -34,9 +38,36 @@ nobyapi_persona = 1 # 0: normal, 1: tsundere-onna, 2: tsundere-otoko, 3: kami
 LINENOTIFY_TOKEN = os.environ["LINENOTIFY_TOKEN"]
 linenotify_url = "https://notify-api.line.me/api/notify"
 
+# Open Weather Map
+OWM_KEY = os.environ["OWM_KEY"]
+owm_url = "http://api.openweathermap.org/data/2.5/weather?units=metric&q={city}&APPID={key}"
+
 # Wasshi value
 ayamaru_rate = 0.5
 
+
+def getWeather(data):
+    city_jp = ""
+    for word in data["wordList"]:
+        if "地域" in word["feature"]:
+            city_jp = word["surface"]
+            break
+
+    if city_jp == "":
+        return "Cannot recognize your city!"
+
+    translator = Translator()
+    city_en = translator.translate(city_jp).text
+    
+    url = owm_url.format(city = city_en, key = OWM_KEY)
+    response = requests.get(url)
+    data = response.json()
+
+    text = city_jp + " is " + data["weather"][0]["main"] + " and " + str(data["main"]["temp"]) + "°C " + str(data["main"]["humidity"]) + "% Now.\n"
+    text += "Max: " + str(data["main"]["temp_max"]) + "°C, min: " + str(data["main"]["temp_min"]) + "°C\n"
+
+    return text
+ 
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -57,9 +88,13 @@ def callback():
 def response_message(event):
     if event.reply_token == "00000000000000000000000000000000":
         return
-
     reply_text = ""
+    do_weather = False
 
+    if "天気" in event.message.text or "気温" in event.message.text:
+        do_weather = True
+
+        
     # Noby api
     params = {
         "appkey": NOBYAPI_KEY,
@@ -73,6 +108,10 @@ def response_message(event):
         #print(html)
         data = json.loads(html)
         reply_text = data["text"]
+
+        if do_weather:
+            reply_text = getWeather(data)
+       
 
     # Ayamaru
     ran = random.uniform(0.0,1.0)
