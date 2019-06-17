@@ -58,7 +58,7 @@ def response_message(event):
     if event.reply_token == "00000000000000000000000000000000":
         return
 
-    text = ""
+    reply_text = ""
 
     # Noby api
     params = {
@@ -72,16 +72,16 @@ def response_message(event):
         html = res.read().decode("utf-8")
         #print(html)
         data = json.loads(html)
-        text = text=data["text"]
+        reply_text = data["text"]
 
     # Ayamaru
     ran = random.uniform(0.0,1.0)
     if ran < ayamaru_rate:
-        text += "。ごめんなさい。"
+        reply_text += "。ごめんなさい。"
 
     # Reply
     messages = TextSendMessage(
-        text=text
+        text = reply_text
     )
     line_bot_api.reply_message(event.reply_token, messages=messages)
 
@@ -89,11 +89,12 @@ def response_message(event):
     headers = {"Authorization" : "Bearer "+ LINENOTIFY_TOKEN}
 
     profile = line_bot_api.get_profile(event.source.user_id)
-    text = ("\n"
+    notify_text = ("\n"
             + "From: " + profile.display_name + "\n"
             + "userId: " + profile.user_id + "\n"
-            + "message: " + event.message.text)
-    payload = {"message" :  text}
+            + "message: " + event.message.text + "\n"
+            + "reply: " + reply_text)
+    payload = {"message" :  notify_text}
 
     #files = {"imageFile": open("test.jpg", "rb")} #バイナリで画像ファイルを開きます。対応している形式はPNG/JPEGです。
     #r = requests.post(url ,headers = headers ,params=payload, files=files)
