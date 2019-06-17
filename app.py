@@ -1,4 +1,6 @@
-import os, json, random
+#!/usr/bin/env python3
+#coding:UTF-8
+import os, json, random, requests
 
 from flask import Flask, request, abort
 from linebot import (
