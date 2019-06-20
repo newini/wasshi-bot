@@ -71,6 +71,7 @@ def response_message(event):
     do_current_weather = False
     do_forcast_weather = False
     do_get_news = False
+    message_type = 1 # 1: text, 2: template. Default is text message
 
     if "天気" in event.message.text or "気温" in event.message.text:
         do_current_weather = True
@@ -80,6 +81,8 @@ def response_message(event):
 
     if "news" in event.message.text or "ニュース" in event.message.text:
         do_get_news = True
+        alt_text = "News"
+        message_type = 2
         
     # Noby api
     params = {
@@ -102,19 +105,31 @@ def response_message(event):
             reply_text += getForcastWeather(data)
 
         if do_get_news:
-            reply_text = getNews(data)
+            capsules = getNews(data)
 
-    # Ayamaru
-    ran = random.uniform(0.0,1.0)
-    if ran < ayamaru_rate:
-        reply_text += "。ごめんなさい。"
+    if message_type == 1:
+        # Ayamaru
+        ran = random.uniform(0.0,1.0)
+        if ran < ayamaru_rate:
+            reply_text += "。ごめんなさい。"
 
-    # Reply
-    messages = TextSendMessage(
-        text = reply_text
-    )
+        # Text message
+        messages = TextSendMessage(
+            text = reply_text
+        )
+
+    elif message_type == 2:
+        # Template message
+        messages = TemplateSendMessage(
+            alt_text=alt_text,
+            template=CarouselTemplate(columns=capsules),
+        )
+
+
+    # Send
     line_bot_api.reply_message(event.reply_token, messages=messages)
 
+    ##
     # Sent info to developer
     headers = {"Authorization" : "Bearer "+ LINENOTIFY_TOKEN}
 
