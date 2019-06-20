@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 #coding:UTF-8
+
 import os, json, random, requests, datetime
 
 from flask import Flask, request, abort
@@ -17,8 +18,10 @@ from linebot.models import (
 # CURL
 import urllib.request, urllib.parse
 
-# Translate
-from googletrans import Translator
+# Functions
+from functions.get_current_weather import getCurrentWeather
+from functions.get_forcast_weather import getForcastWeather
+from functions.get_news import getNews
 
 # Line messange api
 LINE_CHANNEL_ACCESS_TOKEN = os.environ["LINE_CHANNEL_ACCESS_TOKEN"]
@@ -35,16 +38,6 @@ nobyapi_persona = 1 # 0: normal, 1: tsundere-onna, 2: tsundere-otoko, 3: kami
 LINENOTIFY_TOKEN = os.environ["LINENOTIFY_TOKEN"]
 linenotify_url = "https://notify-api.line.me/api/notify"
 
-# Open Weather Map
-OWM_KEY = os.environ["OWM_KEY"]
-owm_current_url = "http://api.openweathermap.org/data/2.5/weather?units=metric&q={city}&APPID={key}&lang=ja"
-owm_forcast_url = "http://api.openweathermap.org/data/2.5/forecast?units=metric&q={city}&APPID={key}&lang=ja"
-forcast_day = 1 # 1 day
-
-# Timezone
-timezone = 9
-JST = datetime.timezone(datetime.timedelta(hours=timezone), 'JST')
-
 # Wasshi value
 ayamaru_rate = 0.5
 
@@ -54,56 +47,6 @@ ayamaru_rate = 0.5
 ##########################################################################
 # App
 app = Flask(__name__)
-
-def getCurrentWeather(data):
-    city_jp = ""
-    for word in data["wordList"]:
-        if "地域" in word["feature"]:
-            city_jp = word["surface"]
-            break
-
-    if city_jp == "":
-        return "Cannot recognize your city!"
-
-    translator = Translator()
-    city_en = translator.translate(city_jp).text
-    
-    url = owm_current_url.format(city = city_en, key = OWM_KEY)
-    response = requests.get(url)
-    data = response.json()
-
-    text = city_jp + " is " + data["weather"][0]["main"] + ":" + data["weather"][0]["description"] + " and " + str(data["main"]["temp"]) + "°C " + str(data["main"]["humidity"]) + "% Now.\n"
-    text += "Max: " + str(data["main"]["temp_max"]) + "°C, min: " + str(data["main"]["temp_min"]) + "°C"
-
-    return text
-
-def getForcastWeather(data):
-    city_jp = ""
-    for word in data["wordList"]:
-        if "地域" in word["feature"]:
-            city_jp = word["surface"]
-            break
-
-    if city_jp == "":
-        return "Cannot recognize your city!"
-
-    translator = Translator()
-    city_en = translator.translate(city_jp).text
-
-    url = owm_forcast_url.format(city = city_en, key = OWM_KEY)
-    response = requests.get(url)
-    data = response.json()
-
-    text = ""
-    cnt = 0
-    for forcast_list in data["list"]:
-        if cnt > 8*forcast_day: break
-        text += ("\n"+ datetime.datetime.fromtimestamp(forcast_list["dt"], JST).strftime('%m/%d %H:%M') + " " + str(forcast_list["main"]["temp"]) + "°C "
-                + forcast_list["weather"][0]["main"] + ":" + forcast_list["weather"][0]["description"])
-        cnt += 1
-
-    return text
-
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -127,12 +70,16 @@ def response_message(event):
     reply_text = ""
     do_current_weather = False
     do_forcast_weather = False
+    do_get_news = False
 
     if "天気" in event.message.text or "気温" in event.message.text:
         do_current_weather = True
 
     if do_current_weather and "予報" in event.message.text:
         do_forcast_weather = True
+
+    if "news" in event.message.text or "ニュース" in event.message.text:
+        do_get_news = True
         
     # Noby api
     params = {
@@ -153,6 +100,9 @@ def response_message(event):
        
         if do_forcast_weather:
             reply_text += getForcastWeather(data)
+
+        if do_get_news:
+            reply_text = getNews(data)
 
     # Ayamaru
     ran = random.uniform(0.0,1.0)
