@@ -48,6 +48,13 @@ ayamaru_rate = 0.5
 # App
 app = Flask(__name__)
 
+
+from pages.plot_graph import plot_graph_api
+
+# Blue Prints
+app.register_blueprint(plot_graph_api)
+
+
 @app.route("/callback", methods=['POST'])
 def callback():
     signature = request.headers['X-Line-Signature']
@@ -78,6 +85,8 @@ def response_message(event):
 
     if do_current_weather and "予報" in event.message.text:
         do_forcast_weather = True
+        alt_text = "Forcast"
+        message_type = 2
 
     if "news" in event.message.text or "ニュース" in event.message.text:
         do_get_news = True
@@ -102,7 +111,8 @@ def response_message(event):
             reply_text = getCurrentWeather(data)
        
         if do_forcast_weather:
-            reply_text += getForcastWeather(data)
+            #reply_text += getForcastWeather(data)
+            capsules = getForcastWeather(data)
 
         if do_get_news:
             capsules = getNews(data)

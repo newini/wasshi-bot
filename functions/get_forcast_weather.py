@@ -3,6 +3,8 @@
 
 import os, requests, datetime
 
+from linebot.models import CarouselColumn
+
 # Translate
 from googletrans import Translator
 
@@ -35,10 +37,32 @@ def getForcastWeather(data):
 
     text = ""
     cnt = 0
+    x = []
+    y = []
     for forcast_list in data["list"]:
         if cnt > 8*forcast_day: break
         text += ("\n"+ datetime.datetime.fromtimestamp(forcast_list["dt"], JST).strftime('%m/%d %H:%M') + " " + str(forcast_list["main"]["temp"]) + "°C "
                 + forcast_list["weather"][0]["main"] + ":" + forcast_list["weather"][0]["description"])
+        x.append(datetime.datetime.fromtimestamp(forcast_list["dt"]))
+        y.append(forcast_list["main"]["temp"])
         cnt += 1
 
-    return text
+    # Get plotly page
+    wasshi_url = "https://wasshi-bot.herokuapp.com/"
+    page_name = "plot_graph"
+    params = {"city": city_jp, "x": x, "y": y}
+    print(params)
+    plot_response = requests.get(url = wasshi_url+page_name, params = params)
+
+    capsules = []
+    capsules.append(
+        CarouselColumn(
+            #thumbnail_image_url=dict_elem["image"],
+            #title=dict_elem["title"][0:39],
+            #text=dict_elem["description"][0:59],
+            text=text[0:119],
+            actions=[{"type": "uri", "label": "URI", "uri": plot_response.url}]
+        )
+    )
+
+    return capsules

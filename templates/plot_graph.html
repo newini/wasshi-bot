@@ -1,0 +1,26 @@
+<head>
+    <meta http-equiv="refresh" content="900"/>
+</head>
+
+<body>
+    <div id='chart'></div>
+<body>
+
+<footer>
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <script type="text/javascript">
+        var graph = {{ graph_json | safe }};
+        var layout = {{ layout_json | safe }};
+        Plotly.plot('chart', graph.data, layout, image_filename='hoge', image="jpeg");
+  </script>
+</footer>    
+
+<!--
+<ul class="items">
+  {% for item in items %}
+  <li><h2>{{ item.x }}, {{ item.y }}</h2></li>
+  {% endfor %}
+</ul>
+-->
