@@ -43,7 +43,7 @@ def getForcastWeather(data):
         if cnt > 8*forcast_day: break
         text += ("\n"+ datetime.datetime.fromtimestamp(forcast_list["dt"], JST).strftime('%m/%d %H:%M') + " " + str(forcast_list["main"]["temp"]) + "°C "
                 + forcast_list["weather"][0]["main"] + ":" + forcast_list["weather"][0]["description"])
-        x.append(datetime.datetime.fromtimestamp(forcast_list["dt"]))
+        x.append(datetime.datetime.fromtimestamp(forcast_list["dt"], JST))
         y.append(forcast_list["main"]["temp"])
         cnt += 1
 
