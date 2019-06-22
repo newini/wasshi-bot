@@ -1,12 +1,6 @@
 #!/usr/bin/env python3
 #coding:UTF-8
-
-import os, requests, datetime
-
-from linebot.models import CarouselColumn
-
-# Translate
-from googletrans import Translator
+from configs.imports import *
 
 # Open Weather Map
 OWM_KEY = os.environ["OWM_KEY"]
@@ -40,24 +34,31 @@ def getForcastWeather(data):
     x = []
     y = []
     for forcast_list in data["list"]:
-        if cnt > 8*forcast_day: break
-        text += ("\n"+ datetime.datetime.fromtimestamp(forcast_list["dt"], JST).strftime('%m/%d %H:%M') + " " + str(forcast_list["main"]["temp"]) + "°C "
-                + forcast_list["weather"][0]["main"] + ":" + forcast_list["weather"][0]["description"])
+        text += (forcast_list["weather"][0]["main"])
         x.append(datetime.datetime.fromtimestamp(forcast_list["dt"], JST))
         y.append(forcast_list["main"]["temp"])
         cnt += 1
+        if cnt > 7*forcast_day: break
+        text += ("->")
+        #text += ("\n"+ datetime.datetime.fromtimestamp(forcast_list["dt"], JST).strftime('%m/%d %H:%M') + " " + str(forcast_list["main"]["temp"]) + "°C "
+        #        + forcast_list["weather"][0]["main"] + ":" + forcast_list["weather"][0]["description"])
 
     # Get plotly page
     wasshi_url = "https://wasshi-bot.herokuapp.com/"
     page_name = "plot_graph"
-    params = {"city": city_jp, "x": x, "y": y}
-    print(params)
+    params = {"city": city_en, "x": x, "y": y}
+
+    # Plot graph
     plot_response = requests.get(url = wasshi_url+page_name, params = params)
 
+    print(os.listdir(os.curdir))
+    print(os.listdir("tmp"))
+
+    page_name = "show_image"
     capsules = []
     capsules.append(
         CarouselColumn(
-            #thumbnail_image_url=dict_elem["image"],
+            thumbnail_image_url=wasshi_url+page_name+"?city="+city_en,
             #title=dict_elem["title"][0:39],
             #text=dict_elem["description"][0:59],
             text=text[0:119],

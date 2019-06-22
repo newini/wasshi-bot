@@ -1,45 +1,18 @@
 #!/usr/bin/env python3
 #coding:UTF-8
+from configs.imports import *
 
-import os, json, random, requests, datetime
+#---------------------------------------
+# Configs
+#---------------------------------------
+# Variables
+from configs.production import *
 
-from flask import Flask, request, abort
-from linebot import (
-    LineBotApi, WebhookHandler
-)
-from linebot.exceptions import (
-    InvalidSignatureError
-)
-from linebot.models import (
-    MessageEvent, TextMessage, TemplateSendMessage, CarouselTemplate, CarouselColumn,
-    TextSendMessage # text message
-)
+# Pages, fuctions route
+from configs.route import *
 
-# CURL
-import urllib.request, urllib.parse
-
-# Functions
-from functions.get_current_weather import getCurrentWeather
-from functions.get_forcast_weather import getForcastWeather
-from functions.get_news import getNews
-
-# Line messange api
-LINE_CHANNEL_ACCESS_TOKEN = os.environ["LINE_CHANNEL_ACCESS_TOKEN"]
-LINE_CHANNEL_SECRET = os.environ["LINE_CHANNEL_SECRET"]
-line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
-handler = WebhookHandler(LINE_CHANNEL_SECRET)
-
-# Talk api
-NOBYAPI_KEY = os.environ["NOBYAPI_KEY"]
-nobyapi_url = "https://www.cotogoto.ai/webapi/noby.json?"
-nobyapi_persona = 1 # 0: normal, 1: tsundere-onna, 2: tsundere-otoko, 3: kami
-
-# Line notify
-LINENOTIFY_TOKEN = os.environ["LINENOTIFY_TOKEN"]
-linenotify_url = "https://notify-api.line.me/api/notify"
-
-# Wasshi value
-ayamaru_rate = 0.5
+# Add static directory
+from configs.static import tmp_api
 
 
 ##########################################################################
@@ -48,11 +21,17 @@ ayamaru_rate = 0.5
 # App
 app = Flask(__name__)
 
-
-from pages.plot_graph import plot_graph_api
-
-# Blue Prints
+# Regist Blue-Prints
 app.register_blueprint(plot_graph_api)
+app.register_blueprint(show_image_api)
+app.register_blueprint(tmp_api)
+
+# Line
+line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
+handler = WebhookHandler(LINE_CHANNEL_SECRET)
+
+# Plotly authentication
+plotly.tools.set_credentials_file(username=PLOTLY_USERNAME, api_key=PLOTLY_API_KEY)
 
 
 @app.route("/callback", methods=['POST'])

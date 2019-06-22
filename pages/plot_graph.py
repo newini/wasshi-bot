@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
 #coding:UTF-8
+from configs.imports import *
 
 PAGE_NAME = "plot_graph"
-
-from flask import Blueprint, request, render_template
-import json
-import plotly
 
 plot_graph_api = Blueprint('plot_graph_api', __name__)
 
@@ -61,5 +58,7 @@ def plot_graph():
 
     graph_json = json.dumps(graph, cls=plotly.utils.PlotlyJSONEncoder)
     layout_json = json.dumps(layout, cls=plotly.utils.PlotlyJSONEncoder)
+
+    plotly.plotly.image.save_as(graph, filename='tmp/'+city, format='jpeg')
 
     return render_template("plot_graph.html", graph_json=graph_json, layout_json=layout_json)

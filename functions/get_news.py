@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 #coding:UTF-8
-
-from linebot.models import CarouselColumn
-
-import requests, xmltodict
-from link_preview import link_preview
+from configs.imports import *
 
 yahoonews_url = "https://news.yahoo.co.jp/{category}/rss.xml"
 category = "pickup"

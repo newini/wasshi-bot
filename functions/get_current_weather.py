@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 #coding:UTF-8
-
-import os, requests
-
-# Translate
-from googletrans import Translator
+from configs.imports import *
 
 # Open Weather Map
 OWM_KEY = os.environ["OWM_KEY"]
