@@ -14,6 +14,11 @@ from configs.route import *
 # Add static directory
 from configs.static import tmp_api
 
+# Python logging
+# https://stackoverflow.com/questions/17743019/flask-logging-cannot-get-it-to-write-to-a-file
+import logging, logging.config
+logging.config.dictConfig(yaml.load(open('./configs/logging.yml')))
+
 
 ##########################################################################
 #                               Main Body

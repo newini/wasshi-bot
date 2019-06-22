@@ -32,5 +32,8 @@ from googletrans import Translator
 # XML to Dictionary for python
 import xmltodict
 
+# YAML
+import yaml
+
 # Link preview
 from link_preview import link_preview

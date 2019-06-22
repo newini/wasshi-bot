@@ -4,3 +4,4 @@ googletrans
 xmltodict
 link_preview
 plotly
+pyyaml
