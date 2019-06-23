@@ -30,6 +30,7 @@ app = Flask(__name__)
 app.register_blueprint(plot_graph_api)
 app.register_blueprint(show_image_api)
 app.register_blueprint(tmp_api)
+app.register_blueprint(send_from_tmp_api)
 
 # Line
 line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
@@ -138,7 +139,6 @@ def response_message(event):
     #files = {"imageFile": open("test.jpg", "rb")} #バイナリで画像ファイルを開きます。対応している形式はPNG/JPEGです。
     #r = requests.post(url ,headers = headers ,params=payload, files=files)
     requests.post(linenotify_url, headers = headers, params=payload)
-
 
 
 if __name__ == "__main__":

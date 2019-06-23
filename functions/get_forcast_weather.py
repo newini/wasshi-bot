@@ -43,22 +43,17 @@ def getForcastWeather(data):
         #text += ("\n"+ datetime.datetime.fromtimestamp(forcast_list["dt"], JST).strftime('%m/%d %H:%M') + " " + str(forcast_list["main"]["temp"]) + "°C "
         #        + forcast_list["weather"][0]["main"] + ":" + forcast_list["weather"][0]["description"])
 
-    # Get plotly page
+    # Plot graph in tmp directory
     wasshi_url = "https://wasshi-bot.herokuapp.com/"
     page_name = "plot_graph"
     params = {"city": city_en, "x": x, "y": y}
-
-    # Plot graph
     plot_response = requests.get(url = wasshi_url+page_name, params = params)
 
-    print(os.listdir(os.curdir))
-    print(os.listdir("tmp"))
-
-    page_name = "show_image"
+    page_name = "send_from_tmp"
     capsules = []
     capsules.append(
         CarouselColumn(
-            thumbnail_image_url=wasshi_url+page_name+"?city="+city_en,
+            thumbnail_image_url=wasshi_url+page_name+"/"+city_en+".jpeg",
             #title=dict_elem["title"][0:39],
             #text=dict_elem["description"][0:59],
             text=text[0:119],
