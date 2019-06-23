@@ -9,7 +9,7 @@ import urllib.request, urllib.parse         # CURL
 # Installed modules
 #-----------------------------------------
 # Flask
-from flask import Flask, Blueprint, request, render_template
+from flask import Flask, Blueprint, request, render_template, send_from_directory
 
 # Line
 from linebot import (

@@ -49,6 +49,6 @@ def getForecastWeather(data):
     plot_response = requests.get(url = wasshi_url+page_name, params = params)
 
     page_name = "send_from_tmp"
-    image_url = wasshi_url + page_name + "/"+city_en + ".jpeg"
+    image_url = wasshi_url + page_name + "?filename=" + city_en + ".jpeg&" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 
     return image_url
