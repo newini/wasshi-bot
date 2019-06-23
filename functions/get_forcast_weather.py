@@ -29,24 +29,23 @@ def getForcastWeather(data):
     response = requests.get(url)
     data = response.json()
 
-    text = ""
     cnt = 0
     x = []
     y = []
+    text = []
     for forcast_list in data["list"]:
-        text += (forcast_list["weather"][0]["main"])
+        text.append(forcast_list["weather"][0]["main"])
         x.append(datetime.datetime.fromtimestamp(forcast_list["dt"], JST))
         y.append(forcast_list["main"]["temp"])
         cnt += 1
         if cnt > 7*forcast_day: break
-        text += ("->")
         #text += ("\n"+ datetime.datetime.fromtimestamp(forcast_list["dt"], JST).strftime('%m/%d %H:%M') + " " + str(forcast_list["main"]["temp"]) + "°C "
         #        + forcast_list["weather"][0]["main"] + ":" + forcast_list["weather"][0]["description"])
 
     # Plot graph in tmp directory
     wasshi_url = "https://wasshi-bot.herokuapp.com/"
     page_name = "plot_graph"
-    params = {"city": city_en, "x": x, "y": y}
+    params = {"city": city_en, "x": x, "y": y, "text": text}
     plot_response = requests.get(url = wasshi_url+page_name, params = params)
 
     page_name = "send_from_tmp"
@@ -54,9 +53,9 @@ def getForcastWeather(data):
     capsules.append(
         CarouselColumn(
             thumbnail_image_url=wasshi_url+page_name+"/"+city_en+".jpeg",
-            #title=dict_elem["title"][0:39],
+            #title="Forcast of " + city_en,
             #text=dict_elem["description"][0:59],
-            text=text[0:119],
+            text="Forcast of " + city_en,
             actions=[{"type": "uri", "label": "URI", "uri": plot_response.url}]
         )
     )

@@ -8,9 +8,11 @@ plot_graph_api = Blueprint('plot_graph_api', __name__)
 
 @plot_graph_api.route("/plot_graph", methods=['GET'])
 def plot_graph():
+    text = []
     if request.args.get("city"): city = request.args.get("city")
     if request.args.get("x"): x = request.args.getlist("x")
     if request.args.get("y"): y = request.args.getlist("y")
+    if request.args.get("text"): text = request.args.getlist("text")
 
     if not city or not x or not y: return "ERROR!"
 
@@ -20,7 +22,10 @@ def plot_graph():
                     x = x,
                     y = y,
                     type="scatter",
-                    name = city
+                    name = city,
+                    mode='lines+markers+text',
+                    text=text,
+                    textposition='top center'
                 )
             ]
         )
