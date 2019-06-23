@@ -25,7 +25,6 @@ app = Flask(__name__)
 
 # Regist Blue-Prints
 app.register_blueprint(plot_graph_api)
-app.register_blueprint(show_image_api)
 app.register_blueprint(send_from_tmp_api)
 
 # Line
