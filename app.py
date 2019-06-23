@@ -11,9 +11,6 @@ from configs.production import *
 # Pages, fuctions route
 from configs.route import *
 
-# Add static directory
-from configs.static import tmp_api
-
 # Python logging
 # https://stackoverflow.com/questions/17743019/flask-logging-cannot-get-it-to-write-to-a-file
 import logging, logging.config
@@ -29,7 +26,6 @@ app = Flask(__name__)
 # Regist Blue-Prints
 app.register_blueprint(plot_graph_api)
 app.register_blueprint(show_image_api)
-app.register_blueprint(tmp_api)
 app.register_blueprint(send_from_tmp_api)
 
 # Line
