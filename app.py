@@ -56,22 +56,22 @@ def response_message(event):
         return
     reply_text = ""
     do_current_weather = False
-    do_forcast_weather = False
+    do_forecast_weather = False
     do_get_news = False
     message_type = 1 # 1: text, 2: template. Default is text message
 
     if "天気" in event.message.text or "気温" in event.message.text:
         do_current_weather = True
 
-    if do_current_weather and "予報" in event.message.text:
-        do_forcast_weather = True
-        alt_text = "Forcast"
+    if "予報" in event.message.text:
+        do_forecast_weather = True
+        alt_text = "Forecast"
         message_type = 2
 
     if "news" in event.message.text or "ニュース" in event.message.text:
         do_get_news = True
         alt_text = "News"
-        message_type = 2
+        message_type = 3
         
     # Noby api
     params = {
@@ -90,9 +90,8 @@ def response_message(event):
         if do_current_weather:
             reply_text = getCurrentWeather(data)
        
-        if do_forcast_weather:
-            #reply_text += getForcastWeather(data)
-            capsules = getForcastWeather(data)
+        if do_forecast_weather:
+            image_url = getForecastWeather(data)
 
         if do_get_news:
             capsules = getNews(data)
@@ -107,8 +106,12 @@ def response_message(event):
         messages = TextSendMessage(
             text = reply_text
         )
-
     elif message_type == 2:
+        messages = ImageSendMessage(
+            original_content_url=image_url,
+            preview_image_url=image_url
+        )
+    elif message_type == 3:
         # Template message
         messages = TemplateSendMessage(
             alt_text=alt_text,

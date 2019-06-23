@@ -12,7 +12,7 @@ timezone = 9
 JST = datetime.timezone(datetime.timedelta(hours=timezone), 'JST')
 
 # Use Open Weather Map API
-def getForcastWeather(data):
+def getForecastWeather(data):
     city_jp = ""
     for word in data["wordList"]:
         if "地域" in word["feature"]:
@@ -49,15 +49,6 @@ def getForcastWeather(data):
     plot_response = requests.get(url = wasshi_url+page_name, params = params)
 
     page_name = "send_from_tmp"
-    capsules = []
-    capsules.append(
-        CarouselColumn(
-            thumbnail_image_url=wasshi_url+page_name+"/"+city_en+".jpeg",
-            #title="Forcast of " + city_en,
-            #text=dict_elem["description"][0:59],
-            text="Forcast of " + city_en,
-            actions=[{"type": "uri", "label": "URI", "uri": plot_response.url}]
-        )
-    )
+    image_url = wasshi_url + page_name + "/"+city_en + ".jpeg"
 
-    return capsules
+    return image_url

@@ -1,7 +1,7 @@
 Flask
-line-bot-sdk
 googletrans
-xmltodict
+line-bot-sdk
 link_preview
 plotly
 pyyaml
+xmltodict

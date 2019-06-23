@@ -1,6 +1,6 @@
 # Functions
 from functions.get_current_weather import getCurrentWeather
-from functions.get_forcast_weather import getForcastWeather
+from functions.get_forecast_weather import getForecastWeather
 from functions.get_news import getNews
 
 # Pages 

@@ -19,12 +19,15 @@ from linebot.exceptions import (
     InvalidSignatureError
 )
 from linebot.models import (
-    MessageEvent, TextMessage, TemplateSendMessage, CarouselTemplate, CarouselColumn,
-    TextSendMessage # text message
+    MessageEvent, TextMessage,
+    TextSendMessage, # text message
+    ImageSendMessage,
+    TemplateSendMessage, CarouselTemplate, CarouselColumn
 )
 
 # Plotly
 import plotly
+from plotly.graph_objs import *
 
 # Translate
 from googletrans import Translator

@@ -25,7 +25,12 @@ def plot_graph():
                     name = city,
                     mode='lines+markers+text',
                     text=text,
-                    textposition='top center'
+                    textposition='top center',
+                    textfont=dict(
+                        family='sans serif',
+                        size=32,
+                        color='#ff7f0e'
+                    )
                 )
             ]
         )
@@ -64,6 +69,7 @@ def plot_graph():
     graph_json = json.dumps(graph, cls=plotly.utils.PlotlyJSONEncoder)
     layout_json = json.dumps(layout, cls=plotly.utils.PlotlyJSONEncoder)
 
-    plotly.plotly.image.save_as(graph, filename='tmp/'+city, format='jpeg')
+    figure = Figure(data=graph, layout=layout)
+    plotly.plotly.image.save_as(figure, filename='tmp/'+city, format='jpeg')
 
     return render_template("plot_graph.html", graph_json=graph_json, layout_json=layout_json)
