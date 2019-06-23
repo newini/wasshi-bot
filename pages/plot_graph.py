@@ -16,12 +16,6 @@ def plot_graph():
 
     if not city or not x or not y: return "ERROR!"
 
-    text_unicode = []
-    print(text)
-    for text_ele in text:
-        print(text_ele)
-        print(type(text_ele))
-
     graph = dict(
             data = [
                 dict(
@@ -77,5 +71,6 @@ def plot_graph():
 
     figure = Figure(data=graph, layout=layout)
     plotly.plotly.image.save_as(figure, filename='tmp/'+city, format='jpeg')
+    #plotly.io.write_image(figure, "tmp/"+city+"ho", format="jpeg") # Need plotly-orca installed by conda!
 
     return render_template("plot_graph.html", graph_json=graph_json, layout_json=layout_json)
