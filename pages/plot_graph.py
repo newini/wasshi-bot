@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-#coding:UTF-8
+# -*- coding: utf-8 -*
 from configs.imports import *
 
 PAGE_NAME = "plot_graph"
@@ -15,6 +15,12 @@ def plot_graph():
     if request.args.get("text"): text = request.args.getlist("text")
 
     if not city or not x or not y: return "ERROR!"
+
+    text_unicode = []
+    print(text)
+    for text_ele in text:
+        print(text_ele)
+        print(type(text_ele))
 
     graph = dict(
             data = [

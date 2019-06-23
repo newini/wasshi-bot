@@ -34,7 +34,13 @@ def getForecastWeather(data):
     y = []
     text = []
     for forcast_list in data["list"]:
-        text.append(forcast_list["weather"][0]["main"])
+        if forcast_list["weather"][0]["main"].lower() == "clear":
+            text.append(u'\U00002600')
+        elif forcast_list["weather"][0]["main"].lower() == "cloud":
+            text.append(u'\U00002601')
+        elif forcast_list["weather"][0]["main"].lower() == "rain":
+            text.append(u'\U0001f327')
+        else: text.append(forcast_list["weather"][0]["main"])
         x.append(datetime.datetime.fromtimestamp(forcast_list["dt"], JST))
         y.append(forcast_list["main"]["temp"])
         cnt += 1
