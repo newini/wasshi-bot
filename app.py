@@ -58,7 +58,7 @@ def response_message(event):
     do_current_weather = False
     do_forecast_weather = False
     do_get_news = False
-    message_type = 1 # 1: text, 2: template. Default is text message
+    message_type = 1 # 1: text, 2: image, 3: template. Default is 1
 
     if "天気" in event.message.text or "気温" in event.message.text:
         do_current_weather = True
@@ -73,6 +73,8 @@ def response_message(event):
         alt_text = "News"
         message_type = 3
         
+
+    print(event)
     # Noby api
     params = {
         "appkey": NOBYAPI_KEY,
