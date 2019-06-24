@@ -50,7 +50,7 @@ def callback():
     return 'OK'
 
 
-@handler.add(MessageEvent, message=TextMessage)
+@handler.add(MessageEvent)
 def response_message(event):
     if event.reply_token == "00000000000000000000000000000000":
         return
@@ -58,53 +58,53 @@ def response_message(event):
     do_current_weather = False
     do_forecast_weather = False
     do_get_news = False
-    message_type = 1 # 1: text, 2: image, 3: template. Default is 1
+    message_type = 6 # 1: text, 2: image, 6: sticker, 10: template. Default is 5
 
-    if "天気" in event.message.text or "気温" in event.message.text:
-        do_current_weather = True
+    # Seperate event treat by message type
+    if event.message.type == "text":
+        message_type = 1
 
-    if "予報" in event.message.text:
-        do_forecast_weather = True
-        alt_text = "Forecast"
-        message_type = 2
+        if "天気" in event.message.text or "気温" in event.message.text:
+            do_current_weather = True
 
-    if "news" in event.message.text or "ニュース" in event.message.text:
-        do_get_news = True
-        alt_text = "News"
-        message_type = 3
-        
+        if "予報" in event.message.text:
+            do_forecast_weather = True
+            alt_text = "Forecast"
+            message_type = 2
 
-    print(event)
-    # Noby api
-    params = {
-        "appkey": NOBYAPI_KEY,
-        "text": event.message.text,
-        "persona": nobyapi_persona,
-    }
-    p = urllib.parse.urlencode(params)
-    url = nobyapi_url + p
-    with urllib.request.urlopen(url) as res:
-        html = res.read().decode("utf-8")
-        #print(html)
-        data = json.loads(html)
-        reply_text = data["text"]
+        if "news" in event.message.text or "ニュース" in event.message.text:
+            do_get_news = True
+            alt_text = "News"
+            message_type = 10
+ 
+        # Noby api
+        params = {
+            "appkey": NOBYAPI_KEY,
+            "text": event.message.text,
+            "persona": nobyapi_persona,
+        }
+        p = urllib.parse.urlencode(params)
+        url = nobyapi_url + p
+        with urllib.request.urlopen(url) as res:
+            html = res.read().decode("utf-8")
+            data = json.loads(html)
+            reply_text = data["text"]
 
-        if do_current_weather:
-            reply_text = getCurrentWeather(data)
-       
-        if do_forecast_weather:
-            image_url = getForecastWeather(data)
+            if do_current_weather:
+                reply_text = getCurrentWeather(data)
+           
+            if do_forecast_weather:
+                image_url = getForecastWeather(data)
 
-        if do_get_news:
-            capsules = getNews(data)
+            if do_get_news:
+                capsules = getNews(data)
 
-    if message_type == 1:
+    if message_type == 1: # Text message
         # Ayamaru
-        ran = random.uniform(0.0,1.0)
+        ran = random.uniform(0.0, 1.0)
         if ran < ayamaru_rate:
             reply_text += "。ごめんなさい。"
 
-        # Text message
         messages = TextSendMessage(
             text = reply_text
         )
@@ -113,16 +113,22 @@ def response_message(event):
             original_content_url=image_url,
             preview_image_url=image_url
         )
-    elif message_type == 3:
-        # Template message
+    elif message_type == 6:
+        sticker_id = random.randint(1, 10)
+        messages = StickerSendMessage(
+            package_id='1',
+            sticker_id=sticker_id
+            )
+    elif message_type == 10: # Template message
         messages = TemplateSendMessage(
             alt_text=alt_text,
             template=CarouselTemplate(columns=capsules),
         )
 
-
-    # Send
+    print(messages)
+    # Reply
     line_bot_api.reply_message(event.reply_token, messages=messages)
+
 
     ##
     # Sent info to developer
@@ -132,7 +138,9 @@ def response_message(event):
     notify_text = ("\n"
             + "From: " + profile.display_name + "\n"
             + "userId: " + profile.user_id + "\n"
-            + "message: " + event.message.text + "\n"
+            + "message.type: " + event.message.type + "\n")
+    if event.message.type == "text":
+        notify_text += ("message: " + event.message.text + "\n"
             + "reply: " + reply_text)
     payload = {"message" :  notify_text}
 

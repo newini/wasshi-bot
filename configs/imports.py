@@ -22,7 +22,8 @@ from linebot.models import (
     MessageEvent, TextMessage,
     TextSendMessage, # text message
     ImageSendMessage,
-    TemplateSendMessage, CarouselTemplate, CarouselColumn
+    TemplateSendMessage, CarouselTemplate, CarouselColumn,
+    StickerSendMessage
 )
 
 # Plotly
