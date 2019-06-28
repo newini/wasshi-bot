@@ -54,7 +54,7 @@ def response_message(event):
         do_get_news = False
         message_type = 1
 
-        if "天気" in event.message.text or "気温" in event.message.text:
+        if "天気" in event.message.text or "気温" in event.message.text or "時間" in event.message.text:
             do_current_weather = True
 
         if "予報" in event.message.text:
