@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #coding:UTF-8
-from configs.imports import *
+from configs.production import *
 
 yahoonews_url = "https://news.yahoo.co.jp/{category}/rss.xml"
 category = "pickup"

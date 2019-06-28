@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
-#coding:UTF-8
-from configs.imports import *
-
-# Open Weather Map
-OWM_KEY = os.environ["OWM_KEY"]
-owm_current_url = "http://api.openweathermap.org/data/2.5/weather?units=metric&q={city}&APPID={key}&lang=ja"
+# -*- coding: utf-8 -*
+from configs.production import *
 
 # Use Open Weather Map API
 def getCurrentWeather(data):

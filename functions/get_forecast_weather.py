@@ -1,11 +1,6 @@
 #!/usr/bin/env python3
 #coding:UTF-8
-from configs.imports import *
-
-# Open Weather Map
-OWM_KEY = os.environ["OWM_KEY"]
-owm_forcast_url = "http://api.openweathermap.org/data/2.5/forecast?units=metric&q={city}&APPID={key}&lang=ja"
-forcast_day = 1 # 1 day
+from configs.production import *
 
 # Timezone
 timezone = 9
@@ -29,6 +24,9 @@ def getForecastWeather(data):
     response = requests.get(url)
     data = response.json()
 
+    # Time
+    timezone = data["city"]["timezone"] # shift second
+
     cnt = 0
     x = []
     y = []
@@ -43,7 +41,7 @@ def getForecastWeather(data):
         #else:
         #    text.append(forcast_list["weather"][0]["main"])
         text.append(forcast_list["weather"][0]["main"])
-        x.append(datetime.datetime.fromtimestamp(forcast_list["dt"], JST))
+        x.append(datetime.datetime.fromtimestamp(forcast_list["dt"]+timezone))
         y.append(forcast_list["main"]["temp"])
         cnt += 1
         if cnt > 7*forcast_day: break

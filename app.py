@@ -1,20 +1,10 @@
 #!/usr/bin/env python3
-#coding:UTF-8
-from configs.imports import *
+# -*- coding: utf-8 -*
 
 #---------------------------------------
 # Configs
 #---------------------------------------
-# Variables
 from configs.production import *
-
-# Pages, fuctions route
-from configs.route import *
-
-# Python logging
-# https://stackoverflow.com/questions/17743019/flask-logging-cannot-get-it-to-write-to-a-file
-import logging, logging.config
-logging.config.dictConfig(yaml.load(open('./configs/logging.yml')))
 
 
 ##########################################################################
@@ -55,17 +45,21 @@ def response_message(event):
     if event.reply_token == "00000000000000000000000000000000":
         return
     reply_text = ""
-    do_current_weather = False
-    do_forecast_weather = False
-    do_get_news = False
-    message_type = 6 # 1: text, 2: image, 6: sticker, 10: template. Default is 5
+    message_type = 6 # 1: text, 2: image, 6: sticker, 10: template. Default is 6
 
     # Seperate event treat by message type
     if event.message.type == "text":
+        do_current_weather = False
+        do_forecast_weather = False
+        do_get_news = False
+        do_get_time = False
         message_type = 1
 
         if "天気" in event.message.text or "気温" in event.message.text:
             do_current_weather = True
+
+        if "時間" in event.message.text:
+            do_get_time = True
 
         if "予報" in event.message.text:
             do_forecast_weather = True
@@ -76,7 +70,7 @@ def response_message(event):
             do_get_news = True
             alt_text = "News"
             message_type = 10
- 
+
         # Noby api
         params = {
             "appkey": NOBYAPI_KEY,
@@ -99,6 +93,7 @@ def response_message(event):
             if do_get_news:
                 capsules = getNews(data)
 
+    # Create message
     if message_type == 1: # Text message
         # Ayamaru
         ran = random.uniform(0.0, 1.0)
