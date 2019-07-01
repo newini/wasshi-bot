@@ -52,6 +52,7 @@ def response_message(event):
         do_current_weather = False
         do_forecast_weather = False
         do_get_news = False
+        do_special_event = False
         message_type = 1
 
         if "天気" in event.message.text or "気温" in event.message.text or "時間" in event.message.text:
@@ -66,6 +67,9 @@ def response_message(event):
             do_get_news = True
             alt_text = "News"
             message_type = 10
+
+        if "参加" in event.message.text:
+            do_special_event = True
 
         # Noby api
         params = {
@@ -96,6 +100,9 @@ def response_message(event):
         if ran < ayamaru_rate:
             reply_text += "。ごめんなさい。"
 
+        if do_special_event:
+            reply_text = "ご参加連絡ありがとうございます。担当者に繋ぎします。"
+
         messages = TextSendMessage(
             text = reply_text
         )
@@ -115,8 +122,6 @@ def response_message(event):
             alt_text=alt_text,
             template=CarouselTemplate(columns=capsules),
         )
-
-    print(messages)
     # Reply
     line_bot_api.reply_message(event.reply_token, messages=messages)
 
@@ -138,6 +143,16 @@ def response_message(event):
     #files = {"imageFile": open("test.jpg", "rb")} #バイナリで画像ファイルを開きます。対応している形式はPNG/JPEGです。
     #r = requests.post(url ,headers = headers ,params=payload, files=files)
     requests.post(linenotify_url, headers = headers, params=payload)
+
+
+    ##
+    # Sent special event message
+    to = "U605ca892d67386c5139104d617ffb3e8" # Oku
+    text = ("飲み会参加希望の方より連絡がありました。\n"
+            + "From: " + profile.display_name + "\n"
+            + "message: " + event.message.text)
+    line_bot_api.push_message(to, TextSendMessage(text=text))
+
 
 
 if __name__ == "__main__":
