@@ -68,7 +68,7 @@ def response_message(event):
             alt_text = "News"
             message_type = 10
 
-        if "参加" in event.message.text:
+        if "参加" in event.message.text or "一次会" in event.message.text or "二次会" in event.message.text:
             do_special_event = True
 
         # Noby api
