@@ -7,13 +7,7 @@ timezone = 9
 JST = datetime.timezone(datetime.timedelta(hours=timezone), 'JST')
 
 # Use Open Weather Map API
-def getForecastWeather(data):
-    city_jp = ""
-    for word in data["wordList"]:
-        if "地域" in word["feature"]:
-            city_jp = word["surface"]
-            break
-
+def getForecastWeather(city_jp):
     if city_jp == "":
         return "Cannot recognize your city!"
 

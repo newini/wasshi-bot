@@ -53,55 +53,67 @@ def response_message(event):
         do_forecast_weather = False
         do_get_news = False
         do_special_event = False
+        do_takoyaki = False
         message_type = 1
 
-        if "天気" in event.message.text or "気温" in event.message.text or "時間" in event.message.text:
-            do_current_weather = True
-
-        if "予報" in event.message.text:
-            do_forecast_weather = True
-            alt_text = "Forecast"
-            message_type = 2
-
-        if "news" in event.message.text or "ニュース" in event.message.text:
-            do_get_news = True
-            alt_text = "News"
-            message_type = 10
-
-        if "参加" in event.message.text or "一次会" in event.message.text or "二次会" in event.message.text:
-            do_special_event = True
-
+        # Through Noby API to get word list
         # Noby api
-        params = {
+        noby_params = {
             "appkey": NOBYAPI_KEY,
             "text": event.message.text,
             "persona": nobyapi_persona,
         }
-        p = urllib.parse.urlencode(params)
-        url = nobyapi_url + p
-        with urllib.request.urlopen(url) as res:
-            html = res.read().decode("utf-8")
-            data = json.loads(html)
-            reply_text = data["text"]
+        noby_p = urllib.parse.urlencode(noby_params)
+        noby_url = nobyapi_url + noby_p
+        noby_response = urllib.request.urlopen(noby_url)
+        noby_html = noby_response.read().decode("utf-8")
+        noby_data = json.loads(noby_html)
+        reply_text = noby_data["text"]
 
-            if do_current_weather:
-                reply_text = getCurrentWeather(data)
-           
-            if do_forecast_weather:
-                image_url = getForecastWeather(data)
+        for word in noby_data["wordList"]:
+            if "地域" in word["feature"]:
+                location = word["surface"]
+            
+            if "テンキ" in word["feature"] or "キオン" in word["feature"] or "ジカン" in word["feature"]:
+                do_current_weather = True
 
-            if do_get_news:
-                capsules = getNews(data)
+            if "ヨホウ" in word["feature"]:
+                do_forecast_weather = True
+                alt_text = "Forecast"
+                message_type = 2
+
+            if "news" in word["feature"] or "ニュース" in word["feature"]:
+                do_get_news = True
+                alt_text = "News"
+                message_type = 10
+
+            if "参加" in word["feature"] or "次会" in word["feature"]:
+                do_special_event = True
+
+            if "タコヤキ" in word["feature"]:
+                do_takoyaki = True
+
+        if do_current_weather:
+            reply_text = getCurrentWeather(location)
+        
+        if do_forecast_weather:
+            image_url = getForecastWeather(location)
+
+        if do_get_news:
+            capsules = getNews(noby_data)
 
     # Create message
     if message_type == 1: # Text message
+        if do_special_event:
+            reply_text = "ご参加連絡ありがとうございます。担当者に繋ぎします。"
+
+        if do_takoyaki:
+            reply_text = "たこたこ！"
+
         # Ayamaru
         ran = random.uniform(0.0, 1.0)
         if ran < ayamaru_rate:
             reply_text += "。ごめんなさい。"
-
-        if do_special_event:
-            reply_text = "ご参加連絡ありがとうございます。担当者に繋ぎします。"
 
         messages = TextSendMessage(
             text = reply_text

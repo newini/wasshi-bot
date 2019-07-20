@@ -3,13 +3,7 @@
 from configs.production import *
 
 # Use Open Weather Map API
-def getCurrentWeather(data):
-    city_jp = ""
-    for word in data["wordList"]:
-        if "地域" in word["feature"]:
-            city_jp = word["surface"]
-            break
-
+def getCurrentWeather(city_jp):
     if city_jp == "":
         return "Cannot recognize your city!"
 
