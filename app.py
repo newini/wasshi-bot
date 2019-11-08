@@ -73,7 +73,7 @@ def response_message(event):
         for word in noby_data["wordList"]:
             if "地域" in word["feature"]:
                 location = word["surface"]
-            
+
             if "テンキ" in word["feature"] or "キオン" in word["feature"] or "ジカン" in word["feature"]:
                 do_current_weather = True
 
@@ -95,7 +95,7 @@ def response_message(event):
 
         if do_current_weather:
             reply_text = getCurrentWeather(location)
-        
+
         if do_forecast_weather:
             image_url = getForecastWeather(location)
 
@@ -159,12 +159,12 @@ def response_message(event):
 
     ##
     # Sent special event message
-    to = "U605ca892d67386c5139104d617ffb3e8" # Oku
-    text = ("飲み会参加希望の方より連絡がありました。\n"
-            + "From: " + profile.display_name + "\n"
-            + "message: " + event.message.text)
-    line_bot_api.push_message(to, TextSendMessage(text=text))
-
+    if do_special_event:
+        to = "U605ca892d67386c5139104d617ffb3e8" # Oku
+        text = ("飲み会参加希望の方より連絡がありました。\n"
+                + "From: " + profile.display_name + "\n"
+                + "message: " + event.message.text)
+        line_bot_api.push_message(to, TextSendMessage(text=text))
 
 
 if __name__ == "__main__":
