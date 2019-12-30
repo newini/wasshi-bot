@@ -46,6 +46,7 @@ def response_message(event):
         return
     reply_text = ""
     message_type = 6 # 1: text, 2: image, 6: sticker, 10: template. Default is 6
+    global nobyapi_persona
 
     # Seperate event treat by message type
     if event.message.type == "text":
@@ -54,6 +55,8 @@ def response_message(event):
         do_get_news = False
         do_special_event = False
         do_takoyaki = False
+        do_setting = False
+        do_setting_reply = False
         message_type = 1
         location = ""
 
@@ -94,6 +97,14 @@ def response_message(event):
             if "タコヤキ" in word["feature"]:
                 do_takoyaki = True
 
+            if "性格" in word["feature"]:
+                do_setting = True
+            if do_setting and "数" in word["feature"]:
+                if 0 <= int(word["surface"]) and int(word["surface"]) <= 3:
+                    nobyapi_persona = int(word["surface"])
+            if do_setting and "教える" in word["feature"]:
+                do_setting_reply = True
+
         if do_current_weather:
             reply_text = getCurrentWeather(location)
 
@@ -102,6 +113,9 @@ def response_message(event):
 
         if do_get_news:
             capsules = getNews(noby_data)
+
+        if do_setting_reply:
+            reply_text = "今のわっしーbotの性格は: " + str(nobyapi_persona) + "(# 0: normal, 1: tsundere-onna, 2: tsundere-otoko, 3: kami)"
 
     # Create message
     if message_type == 1: # Text message
