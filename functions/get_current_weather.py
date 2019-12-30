@@ -9,10 +9,14 @@ def getCurrentWeather(city_jp):
 
     translator = Translator()
     city_en = translator.translate(city_jp).text
-    
+
     url = owm_current_url.format(city = city_en, key = OWM_KEY)
     response = requests.get(url)
     data = response.json()
+
+    # If city not found in OWM
+    if "cod" in data and data["cod"] == "404":
+        return "Cannot recognize your city in OWM!"
 
     # Time
     timezone = data["timezone"] # shift second

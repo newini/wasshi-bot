@@ -9,7 +9,8 @@ JST = datetime.timezone(datetime.timedelta(hours=timezone), 'JST')
 # Use Open Weather Map API
 def getForecastWeather(city_jp):
     if city_jp == "":
-        return "Cannot recognize your city!"
+        shutil.copyfile("assets/images/city_not_found.jpg", "tmp/city_not_found.jpg")
+        return "https://wasshi-bot.herokuapp.com/send_from_tmp?filename=city_not_found.jpg"
 
     translator = Translator()
     city_en = translator.translate(city_jp).text
@@ -17,6 +18,11 @@ def getForecastWeather(city_jp):
     url = owm_forcast_url.format(city = city_en, key = OWM_KEY)
     response = requests.get(url)
     data = response.json()
+
+    # If city not found in OWM
+    if "cod" in data and data["cod"] == "404":
+        shutil.copyfile("assets/images/city_not_found_owm.jpg", "tmp/city_not_found_owm.jpg")
+        return "https://wasshi-bot.herokuapp.com/send_from_tmp?filename=city_not_found_owm.jpg"
 
     # Time
     timezone = data["city"]["timezone"] # shift second
