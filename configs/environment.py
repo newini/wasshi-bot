@@ -7,7 +7,7 @@ LINE_CHANNEL_SECRET = os.environ["LINE_CHANNEL_SECRET"]
 # Talk api
 NOBYAPI_KEY = os.environ["NOBYAPI_KEY"]
 nobyapi_url = "https://www.cotogoto.ai/webapi/noby.json?"
-nobyapi_persona = 3 # 0: normal, 1: tsundere-onna, 2: tsundere-otoko, 3: kami
+nobyapi_persona = 1 # 0: normal, 1: tsundere-onna, 2: tsundere-otoko, 3: kami
 
 # Line notify
 LINENOTIFY_TOKEN = os.environ["LINENOTIFY_TOKEN"]
