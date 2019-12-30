@@ -30,7 +30,7 @@ def plot_graph():
                     textposition='top center',
                     textfont=dict(
                         family='sans serif',
-                        size=32,
+                        size=24,
                         color='#ff7f0e'
                     )
                 )
