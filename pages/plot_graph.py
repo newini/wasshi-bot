@@ -16,6 +16,8 @@ def plot_graph():
 
     if not city or not x or not y: return "ERROR!"
 
+    text[0] = city +  "<br>" + text[0]
+
     graph = dict(
             data = [
                 dict(
@@ -63,20 +65,7 @@ def plot_graph():
                     font = dict(
                             size = 18
                         )
-                ),
-            annotations = [
-                    go.layout.Annotation(
-                            text=city,
-                            align='left',
-                            showarrow=False,
-                            xref='paper',
-                            yref='paper',
-                            x=0.1,
-                            y=0.8,
-                            bordercolor='black',
-                            borderwidth=1
-                    )
-                ]
+                )
         )
 
     graph_json = json.dumps(graph, cls=plotly.utils.PlotlyJSONEncoder)
