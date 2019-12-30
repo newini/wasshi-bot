@@ -55,6 +55,7 @@ def response_message(event):
         do_special_event = False
         do_takoyaki = False
         message_type = 1
+        location = ""
 
         # Through Noby API to get word list
         # Noby api
@@ -72,7 +73,7 @@ def response_message(event):
 
         for word in noby_data["wordList"]:
             if "地域" in word["feature"]:
-                location = word["surface"]
+                if location == "": location = word["surface"]
 
             if "テンキ" in word["feature"] or "キオン" in word["feature"] or "ジカン" in word["feature"]:
                 do_current_weather = True
