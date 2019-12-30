@@ -1,4 +1,5 @@
 Flask
+chart-studio
 googletrans
 line-bot-sdk
 link_preview

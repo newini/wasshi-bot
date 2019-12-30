@@ -63,8 +63,8 @@ def plot_graph():
                     font = dict(
                             size = 18
                         )
-                )
-            annotations=[
+                ),
+            annotations = [
                     go.layout.Annotation(
                             text=city,
                             align='left',
@@ -83,7 +83,7 @@ def plot_graph():
     layout_json = json.dumps(layout, cls=plotly.utils.PlotlyJSONEncoder)
 
     figure = Figure(data=graph, layout=layout)
-    plotly.plotly.image.save_as(figure, filename='tmp/'+city, format='jpeg')
+    chart_studio.plotly.image.save_as(figure, filename='tmp/'+city, format='jpeg')
     #plotly.io.write_image(figure, "tmp/"+city+"ho", format="jpeg") # Need plotly-orca installed by conda!
 
     return render_template("plot_graph.html", graph_json=graph_json, layout_json=layout_json)

@@ -31,6 +31,7 @@ from linebot.models import (
 import plotly
 from plotly.graph_objs import *
 import plotly.graph_objs as go
+import chart_studio
 
 # Translate
 from googletrans import Translator
