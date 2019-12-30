@@ -30,6 +30,7 @@ from linebot.models import (
 # Plotly
 import plotly
 from plotly.graph_objs import *
+import plotly.graph_objs as go
 
 # Translate
 from googletrans import Translator
