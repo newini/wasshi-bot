@@ -105,6 +105,11 @@ def response_message(event):
             if do_setting and "教える" in word["feature"]:
                 do_setting_reply = True
 
+        if location == "":
+            text_temp = event.message.text
+            if "予報" in text_temp: location = text_temp.split('予報')[0]
+            if "天気" in text_temp: location = text_temp.split('天気')[0]
+
         if do_current_weather:
             reply_text = getCurrentWeather(location)
 
