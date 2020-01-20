@@ -16,8 +16,6 @@ def plot_graph():
 
     if not city or not x or not y: return "ERROR!"
 
-    text[0] = city +  "<br>" + text[0]
-
     graph = dict(
             data = [
                 dict(
