@@ -47,7 +47,7 @@ def getForecastWeather(city_jp):
         if cnt > 7*forcast_day: break
 
     # Add city and contry into text
-    text[0] = city + '<br>' + data['sys']['country'] + "<br>" + text[0]
+    text[0] = city_en + '<br>' + data['city']['country'] + "<br>" + text[0]
 
     # Plot graph in tmp directory
     wasshi_url = "https://wasshi-bot.herokuapp.com/"
