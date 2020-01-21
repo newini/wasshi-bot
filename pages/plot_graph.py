@@ -70,6 +70,7 @@ def plot_graph():
     layout_json = json.dumps(layout, cls=plotly.utils.PlotlyJSONEncoder)
 
     figure = Figure(data=graph, layout=layout)
+    figure.update_yaxes(range=[float(min(y))-5, float(max(y))+5])
     chart_studio.plotly.image.save_as(figure, filename='tmp/'+city, format='jpeg')
     #plotly.io.write_image(figure, "tmp/"+city+"ho", format="jpeg") # Need plotly-orca installed by conda!
 
