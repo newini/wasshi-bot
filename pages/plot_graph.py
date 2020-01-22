@@ -71,7 +71,7 @@ def plot_graph():
 
     figure = Figure(data=graph, layout=layout)
     #figure.update_xaxes(range=[float(min(x)-10800), float(max(x)+10800)])
-    figure.update_yaxes(range=[float(min(y)), float(max(y))+5])
+    figure.update_yaxes(range=[float(min(y))-4, float(max(y))+4])
     chart_studio.plotly.image.save_as(figure, filename='tmp/'+city, format='jpeg')
     #plotly.io.write_image(figure, "tmp/"+city+"ho", format="jpeg") # Need plotly-orca installed by conda!
 
