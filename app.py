@@ -78,7 +78,7 @@ def response_message(event):
             if "地域" in word["feature"]:
                 if location == "": location = word["surface"]
 
-            if "テンキ" in word["feature"] or "キオン" in word["feature"] in word["feature"]:
+            if "テンキ" in word["feature"] in word["feature"]:
                 do_current_weather = True
 
             if "ヨホウ" in word["feature"]:
