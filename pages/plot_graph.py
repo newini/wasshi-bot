@@ -74,7 +74,8 @@ def plot_graph():
             datetime.datetime.strptime(x[0], '%Y-%m-%d %H:%M:%S')-datetime.timedelta(hours=4),
             datetime.datetime.strptime(x[-1], '%Y-%m-%d %H:%M:%S')+datetime.timedelta(hours=2)
         ])
-    figure.update_yaxes(range=[float(min(y))-6, float(max(y))+8])
+    yy = [float(i) for i in y]
+    figure.update_yaxes(range=[min(yy)-6, max(yy)+8])
     chart_studio.plotly.image.save_as(figure, filename='tmp/'+city, format='jpeg')
     #plotly.io.write_image(figure, "tmp/"+city+"ho", format="jpeg") # Need plotly-orca installed by conda!
 
