@@ -9,4 +9,4 @@ from configs.route import *
 
 # Python logging
 # https://stackoverflow.com/questions/17743019/flask-logging-cannot-get-it-to-write-to-a-file
-logging.config.dictConfig(yaml.load(open('./configs/logging.yml')))
+logging.config.dictConfig(yaml.load(open("./configs/logging.yml")))

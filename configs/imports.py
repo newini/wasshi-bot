@@ -1,31 +1,30 @@
-#-----------------------------------------
+# -----------------------------------------
 # Default modules
-#-----------------------------------------
+# -----------------------------------------
 import os, json, random, requests, datetime
-import urllib.request, urllib.parse         # CURL
+import urllib.request, urllib.parse  # CURL
 import logging, logging.config
-import shutil # copyfile
+import shutil  # copyfile
 
 
-#-----------------------------------------
+# -----------------------------------------
 # Installed modules
-#-----------------------------------------
+# -----------------------------------------
 # Flask
 from flask import Flask, Blueprint, request, render_template, send_from_directory
 
 # Line
-from linebot import (
-    LineBotApi, WebhookHandler
-)
-from linebot.exceptions import (
-    InvalidSignatureError
-)
+from linebot import LineBotApi, WebhookHandler
+from linebot.exceptions import InvalidSignatureError
 from linebot.models import (
-    MessageEvent, TextMessage,
-    TextSendMessage, # text message
+    MessageEvent,
+    TextMessage,
+    TextSendMessage,  # text message
     ImageSendMessage,
-    TemplateSendMessage, CarouselTemplate, CarouselColumn,
-    StickerSendMessage
+    TemplateSendMessage,
+    CarouselTemplate,
+    CarouselColumn,
+    StickerSendMessage,
 )
 
 # Plotly
